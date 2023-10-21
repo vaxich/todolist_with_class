@@ -1,0 +1,9 @@
+.App {
+  padding: 50px;
+  display: flex;
+}
+
+.App > div {
+  padding-left: 50px;
+}
+
