@@ -1,6 +1,7 @@
 type PropsType = {
     title: string
     tasks: Array<TaskType>
+    removeTask: (id: number) => void
 }
 
 export type TaskType = {
@@ -9,16 +10,31 @@ export type TaskType = {
     isDone: boolean
 }
 
-export function Todolist(props: PropsType) {
+export const Todolist = (props: PropsType) => {
+
+    const tasksList: Array<JSX.Element> = props.tasks.map(task => {
+        return (
+            <li key ={task.id}>
+                <input type="checkbox" checked={task.isDone} />
+                <span>{task.title}</span>
+                <button onClick={ () => props.removeTask(task.id)}>X</button>
+            </li>
+        )
+    })
+
     return (
         <div>
             <h3>{props.title}</h3>
             <div>
                 <ul>
-                    <li> <input type="checkbox" checked={props.tasks[0].isDone} /> <span>{props.tasks[0].title}</span></li>
-                    <li> <input type="checkbox" checked={props.tasks[1].isDone} /> <span>{props.tasks[1].title}</span></li>
-                    <li> <input type="checkbox" checked={props.tasks[2].isDone} /> <span>{props.tasks[2].title}</span></li>
+                    {tasksList}
                 </ul>
+                <div>
+                    <button>All</button>
+                    <button>Active</button>
+                    <button>Completed</button>
+                </div>
+
             </div>
         </div>
     )
