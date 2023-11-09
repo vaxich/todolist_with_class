@@ -21,11 +21,8 @@ const App = () => {
   )
 
   const removeTask = (id: string) => {
-
     let taskForTodolist = tasks.filter(task => task.id !== id);
     setTasks(taskForTodolist)
-
-
   }
 
 const addTask = (title: string) => {
@@ -42,6 +39,14 @@ const addTask = (title: string) => {
   const changeFilter = (value: FilterValueType) => {
     setFilter(value)
 
+  }
+
+  const chengeTaskStatus = (taskId: string, isDone:boolean) => {
+    let task = tasks.find( task => task.id === taskId);
+    if(task) {
+      task.isDone = !isDone;
+      setTasks([...tasks])
+    }
   }
 
   let filteredTasks = tasks;
@@ -65,6 +70,8 @@ const addTask = (title: string) => {
         removeTask={removeTask}
         changeFilter={changeFilter}
         addTask={addTask}
+        chengeTaskStatus = {chengeTaskStatus}
+        filter = {filter}
       />
 
     </div>
