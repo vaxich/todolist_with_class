@@ -1,22 +1,20 @@
-import { ChangeEvent, ChangeEventHandler, KeyboardEvent, useState } from "react"
-import { FilterValueType } from "./App"
+import { ChangeEvent, KeyboardEvent, useState } from "react"
+import { FilterValueType, TaskType } from "./App"
 import './App.css';
-import './App.css';
+
 type PropsType = {
+    todolistId: string
     title: string
     tasks: Array<TaskType>
-    removeTask: (id: string) => void
-    changeFilter: (value: FilterValueType) => void
-    addTask: (title: string) => void
-    chengeTaskStatus: (taskId: string, isDone: boolean) => void
+    removeTask: (todolistId: string, taskId: string) => void
+    changeFilter: (todolistId: string, value: FilterValueType) => void
+    addTask: (todolistId: string, newTitle: string) => void
+    chengeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void
+    removeTodolist: (todolistId: string) => void
     filter: FilterValueType
 }
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+
 
 export const Todolist = (props: PropsType) => {
 
@@ -26,15 +24,24 @@ export const Todolist = (props: PropsType) => {
     let isAddTaskBtnDisabled = newTitle.length > 15 || newTitle.length === 0
 
 
+    // let taskForTodolist = tasks;
+
+    // if (tl.filter === "Active") {
+    //   taskForTodolist = tasks.filter(task => task.isDone === false)
+    // }
+    // if (tl.filter === "Completed") {
+    //   taskForTodolist = tasks.filter(task => task.isDone === true)
+    // }
+
 
     const userMessageStartTyping = newTitle.length === 0 && <p >введите текст</p>
     const userMessageLenghtsTitle = newTitle.length > 15 && <p style={{ color: "red" }}>Your message is long</p>
 
 
 
-    const addTaskHaldler = (newTitle: string) => {
-        if (newTitle.trim() != "") {
-            props.addTask(newTitle.trim())
+    const addTaskHaldler = (todolistId: string, newTitle: string) => {
+        if (newTitle.trim() !== "") {
+            props.addTask(todolistId, newTitle.trim())
             setNewTitle("")
         } else {
             setError("title is required")
@@ -47,10 +54,13 @@ export const Todolist = (props: PropsType) => {
     }
     const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null)
-        e.key === "Enter" && !isAddTaskBtnDisabled && addTaskHaldler(newTitle)
+        e.key === "Enter" && !isAddTaskBtnDisabled && addTaskHaldler(props.todolistId, newTitle)
     }
-    const onChangeTaskStatus = (taskId: string, isDone: boolean) => {
-        props.chengeTaskStatus(taskId, isDone)
+    const onChangeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
+        props.chengeTaskStatus(todolistId, taskId, isDone)
+    }
+    const removeTodolistHandler = () => {
+        props.removeTodolist(props.todolistId)
     }
 
 
@@ -60,12 +70,12 @@ export const Todolist = (props: PropsType) => {
                 <input
                     type="checkbox"
                     checked={task.isDone}
-                    onChange={() => onChangeTaskStatus(task.id, task.isDone)}
+                    onChange={() => onChangeTaskStatus(props.todolistId, task.id, task.isDone)}
                     className={error ? 'error' : ''}
                 />
                 <span>{task.title}</span>
-                <button onClick={() => props.removeTask(task.id)}>X</button>
-                
+                <button onClick={() => props.removeTask(props.todolistId, task.id)}>X</button>
+
             </li>
         )
     })
@@ -73,6 +83,7 @@ export const Todolist = (props: PropsType) => {
     return (
         <div>
             <h3>{props.title}</h3>
+            <button onClick={removeTodolistHandler}>X</button>
             <div>
                 <input
                     value={newTitle}
@@ -81,7 +92,7 @@ export const Todolist = (props: PropsType) => {
                 />
                 <button
                     disabled={isAddTaskBtnDisabled}
-                    onClick={() => addTaskHaldler(newTitle)}>+</button>
+                    onClick={() => addTaskHaldler(props.todolistId, newTitle)}>+</button>
                 {userMessageStartTyping}
             </div>
             <div>
@@ -89,9 +100,9 @@ export const Todolist = (props: PropsType) => {
                     {tasksList}
                 </ul>
                 <div>
-                    <button className={props.filter === "All" ? "active-filter" : " "} onClick={() => props.changeFilter("All")}>All</button>
-                    <button className={props.filter === "Active" ? 'active-filter' : ""} onClick={() => props.changeFilter("Active")}>Active</button>
-                    <button className={props.filter === "Completed" ? 'active-filter' : ""} onClick={() => props.changeFilter("Completed")}>Completed</button>
+                    <button className={props.filter === "All" ? "active-filter" : " "} onClick={() => props.changeFilter(props.todolistId, "All")}>All</button>
+                    <button className={props.filter === "Active" ? 'active-filter' : ""} onClick={() => props.changeFilter(props.todolistId, "Active")}>Active</button>
+                    <button className={props.filter === "Completed" ? 'active-filter' : ""} onClick={() => props.changeFilter(props.todolistId, "Completed")}>Completed</button>
                 </div>
 
                 {userMessageLenghtsTitle}
