@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { Todolist } from './Todolist';
 import { v1 } from 'uuid';
+import { AddItemForm } from './AddItemForm';
 
 
 export type FilterValueType = "All" | "Active" | "Completed"
@@ -28,14 +29,6 @@ const App = () => {
     { id: todolistId1, title: "What to learn", filter: "All" },
     { id: todolistId2, title: "What to buy", filter: "All" },
   ])
-
-  // const [tasks, setTasks] = useState<Array<TaskType>>(
-  //   [
-  //     { id: v1(), title: "css", isDone: true },
-  //     { id: v1(), title: "js", isDone: true },
-  //     { id: v1(), title: "react", isDone: false },
-  //   ]
-  // )
 
   const [tasks, setTasks] = useState({
     [todolistId1]: [
@@ -96,11 +89,29 @@ const App = () => {
     // }
   }
   const removeTodolist = (todolistId: string) => {
-    setTodolists(todolists.filter( tl => tl.id !== todolistId));
+    setTodolists(todolists.filter(tl => tl.id !== todolistId));
     delete tasks[todolistId]
   }
+
+  const addTodolist = (newTitle: string) => {
+    const newTodolist: TodolistType = { id: v1(), title: newTitle, filter: "All" } //создаём новый тудулист
+    setTodolists([newTodolist, ...todolists]) // добавляем новый тудулист к старым тудулистам
+    setTasks({ ...tasks, [newTodolist.id]: [] })// обновляем таскм и создаём пустой массив для нового туддулиста
+  }
+
+  const updateTask = (todolistId: string, taskId: string, newTitle: string) => {
+    setTasks({ ...tasks, [todolistId]: tasks[todolistId].map(task => task.id === taskId ? { ...task, title: newTitle } : task) })
+  }
+
+  const updateTodolistTitle = (todolistId: string, newTitle: string) => {
+    setTodolists(todolists.map(tl => tl.id === todolistId ? { ...tl, title: newTitle } : tl))
+  }
+
   return (
     <div className="App">
+
+      <AddItemForm callBack={addTodolist} />
+
       {todolists.map(tl => {
         let taskForTodolist = tasks[tl.id];
 
@@ -120,8 +131,10 @@ const App = () => {
             changeFilter={changeFilter}
             addTask={addTask}
             chengeTaskStatus={chengeTaskStatus}
-            removeTodolist = {removeTodolist}
+            removeTodolist={removeTodolist}
             filter={tl.filter}
+            updateTask={updateTask}
+            updateTodolistTitle={updateTodolistTitle}
           />
         )
       })}
