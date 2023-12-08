@@ -1,3 +1,5 @@
+import Button from "@mui/material/Button/Button";
+import TextField from "@mui/material/TextField/TextField";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 
 
@@ -6,6 +8,12 @@ export type AddItemPropsType = {
 }
 
 export const AddItemForm = (props: AddItemPropsType) => {
+    const styleButton = {
+        maxWidth: '38px',
+        maxHeight: "38px",
+        minWidth: '38px',
+        minHeight: '38px'
+    }
 
     const [newTitle, setNewTitle] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -23,7 +31,7 @@ export const AddItemForm = (props: AddItemPropsType) => {
     }
 
     let isAddTaskBtnDisabled = newTitle.length > 15 || newTitle.length === 0
-    const userMessageStartTyping = newTitle.length === 0 && <p >введите текст</p>
+    
     const userMessageLenghtsTitle = newTitle.length > 15 && <p style={{ color: "red" }}>Your message is long</p>
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,18 +44,34 @@ export const AddItemForm = (props: AddItemPropsType) => {
 
     return (
         <div>
-            <input
+            <TextField
+            error={!!error}
+            size="small"
+                id="outlined-basic"
+                label={error ? error : "type somethihg"}
+                variant="outlined"
                 value={newTitle}
                 onChange={onChangeHandler}
                 onKeyDown={onKeyDownHandler}
                 className={error ? 'error' : ''}
             />
-            <button
+            {/* <input
+                value={newTitle}
+                onChange={onChangeHandler}
+                onKeyDown={onKeyDownHandler}
+                className={error ? 'error' : ''}
+            /> */}
+            {/* <button
                 disabled={isAddTaskBtnDisabled}
-                onClick={() => addTaskHaldler(newTitle)}>+</button>
+                onClick={() => addTaskHaldler(newTitle)}>+</button> */}
+            <Button
+                onClick={() => addTaskHaldler(newTitle)}
+                disabled={isAddTaskBtnDisabled}
+                style={styleButton}
+                variant="contained">+</Button>
 
             {error && <div className="error-message">{error}</div>}
-            {userMessageStartTyping}
+            
             {userMessageLenghtsTitle}
         </div>
     )

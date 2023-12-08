@@ -32,10 +32,10 @@ export const EdiableSpan = (props: EdiableSpanPropsType) => {
     const userMessageLenghtsTitle = newTitle.length > 15 && <p style={{ color: "red" }}>Your message is long</p>
 
     return (
-        <div>
+        <div >
             {edit
-                ? <input value={newTitle} onBlur={editHandler} autoFocus onChange={onChangeHandler} />
-                : <span onDoubleClick={editHandler}>{props.oldTitle}</span>}
+                ? <input  value={newTitle} onBlur={editHandler} autoFocus onChange={onChangeHandler} />
+                : <span  onDoubleClick={editHandler}>{props.oldTitle}</span>}
 
 
             {userMessageStartTyping}
