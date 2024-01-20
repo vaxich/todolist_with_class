@@ -86,9 +86,7 @@ export const Todolist = (props: PropsType) => {
                     {tasksList}
                 </ul>
                 <div>
-                    {/* <button className={props.filter === "All" ? "active-filter" : " "} onClick={() => props.changeFilter(props.todolistId, "All")}>All</button>
-                    <button className={props.filter === "Active" ? 'active-filter' : ""} onClick={() => props.changeFilter(props.todolistId, "Active")}>Active</button>
-                    <button className={props.filter === "Completed" ? 'active-filter' : ""} onClick={() => props.changeFilter(props.todolistId, "Completed")}>Completed</button> */}
+                   
 
                     <Button
                         variant={props.filter === "All" ? "outlined" : "contained"}
